@@ -2,47 +2,43 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct variaveis{
+    int qntd;
+    int tamanhoBuffer;
+    int auxMenu;
+}Var;
+
+typedef struct atributos_Agenda {
+    char numero[20];
+    char nome[20];
+}Agenda;
+
+
 void criaContato(void *buffer);
-void buscaContato(void *buffer);
+//void buscaContato(void *buffer);
 void desalocaAgenda(void *buffer);
 
-int *tamAux = NULL;
-int *qnt = NULL;
-int *idP = NULL;
-int *numero = NULL;
-char *nome = NULL;
-
 int main(){
+
     void *pBuffer = NULL;
 
-    int *aux = NULL;
-    aux = malloc(sizeof(int));
-        if(aux == NULL){
-            return -1;
-        }
+    Var *v;
 
-
-    pBuffer = malloc( (sizeof(int) * 4) + (sizeof(char) * 20)   );
+    pBuffer = malloc(sizeof(Var));
         if(pBuffer == NULL){
             return -1;
         }
 
-    qnt = pBuffer;
-    tamAux = pBuffer + sizeof(int) ;
-    idP = pBuffer + (sizeof(int) * 2);
-    numero = pBuffer + (sizeof(int) * 3);
-    nome = pBuffer + (sizeof(int) * 4);
-
-    // BUFFER INICIAL =  || QUANTIDADE DE PESSOAS|| TAMANHO DO BUFFER || ID || NUMERO || PESSOA ||
-    *qnt = 1;
-    *idP = 0;
-    *tamAux = (sizeof(int) * 4) + (sizeof(char) * 20);
+    v = pBuffer;
+    v->qntd = 0;
+    v->tamanhoBuffer = sizeof(Var);
+    v->auxMenu = -1;
 
     do{
        printf("1 - Insere\n2 - Busca\n3- Desaloca\n0 - Sair\n");
-       scanf("%d", aux);
+       scanf("%d", &v->auxMenu);
 
-       switch(*aux){
+       switch(v->auxMenu){
 
        case 1:
         criaContato(pBuffer);
@@ -60,38 +56,35 @@ int main(){
        printf("Codigo incorreto\n");
        }
 
-    }while(aux!=0);
-
-    free(aux);
+    }while(v->auxMenu != 0);
     return 0;
 }
 
 void criaContato(void *buffer){
 
-    buffer = realloc(buffer, (  (sizeof(int) * 4) + (sizeof(char) * 20) ) * (*qnt) );
+    Agenda *pessoa;
+    Var *v;
 
-    printf("Nome: \n");
-    scanf("%s20", nome);
+    v = buffer;
+    v->qntd += 1;
+    v->tamanhoBuffer = (v->tamanhoBuffer + sizeof(Agenda));
 
-    printf("Numero: \n");
-    scanf("%d", numero);
+    buffer = realloc(buffer, v->tamanhoBuffer);
+    v = buffer;
 
-    *tamAux = (*tamAux) * (*qnt);
+    buffer = buffer + (sizeof(Var) + (sizeof(Agenda) * (v->qntd-1)));
+    pessoa = buffer;
 
-    qnt = buffer + *tamAux;
-    tamAux = buffer + sizeof(int) + *tamAux;
-    idP = buffer + (sizeof(int) * 2) + *tamAux;
-    numero = buffer + (sizeof(int) * 3) + *tamAux;
-    nome = (buffer + (sizeof(int) * 4)) + *tamAux;
+    getchar();
 
-    *qnt += 1;
-    *idP += 1;
-
-}
-
-void buscaContato(void *buffer){
+    printf("Nome : \n");
+    scanf("%s20", pessoa->nome);
+    printf("Numero : \n");
+    scanf("%s20", pessoa->numero);
 
 }
+
+//void buscaContato(void *buffer){}
 
 void desalocaAgenda(void *buffer){
     free(buffer);
