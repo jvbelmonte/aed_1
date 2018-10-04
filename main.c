@@ -4,7 +4,6 @@
 
 typedef struct variaveis{
     int qntd;
-    int tamanhoBuffer;
     int auxMenu;
 }Var;
 
@@ -13,16 +12,15 @@ typedef struct atributos_Agenda {
     char nome[20];
 }Agenda;
 
+void *pBuffer = NULL;
+Var *v;
 
-void criaContato(void *buffer);
-//void buscaContato(void *buffer);
+void criaContato();
 void desalocaAgenda(void *buffer);
+
 
 int main(){
 
-    void *pBuffer = NULL;
-
-    Var *v;
 
     pBuffer = malloc(sizeof(Var));
         if(pBuffer == NULL){
@@ -31,7 +29,6 @@ int main(){
 
     v = pBuffer;
     v->qntd = 0;
-    v->tamanhoBuffer = sizeof(Var);
     v->auxMenu = -1;
 
     do{
@@ -41,7 +38,7 @@ int main(){
        switch(v->auxMenu){
 
        case 1:
-        criaContato(pBuffer);
+        criaContato();
        break;
 
        case 3:
@@ -49,7 +46,7 @@ int main(){
        break;
 
        case 0:
-       return 0;
+        return 0;
        break;
 
        default :
@@ -60,28 +57,21 @@ int main(){
     return 0;
 }
 
-void criaContato(void *buffer){
+void criaContato(){
 
     Agenda *pessoa;
-    Var *v;
 
-    v = buffer;
+    v = pBuffer;
     v->qntd += 1;
-    v->tamanhoBuffer = (v->tamanhoBuffer + sizeof(Agenda));
 
-    buffer = realloc(buffer, v->tamanhoBuffer);
-    v = buffer;
-
-    buffer = buffer + (sizeof(Var) + (sizeof(Agenda) * (v->qntd-1)));
-    pessoa = buffer;
-
-    getchar();
+    pBuffer = realloc(pBuffer, sizeof(Var) + (sizeof(Agenda) * (v->qntd)));
+    v = pBuffer;
+    pessoa = pBuffer + (sizeof(Var) + (sizeof(Agenda) * (v->qntd-1)));
 
     printf("Nome : \n");
     scanf("%s20", pessoa->nome);
     printf("Numero : \n");
     scanf("%s20", pessoa->numero);
-
 }
 
 //void buscaContato(void *buffer){}
