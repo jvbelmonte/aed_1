@@ -5,9 +5,10 @@
 typedef struct variaveis{
     int qntd;
     int auxMenu;
-    int nListar;
     int i;
     int j;
+    int excAux;
+    int nomeCmp;
     char nomeAux[20];
     char numAux[20];
 }Var;
@@ -24,6 +25,8 @@ void criaContato();
 void buscaContato();
 void desalocaAgenda();
 void listarContatos();
+void excluirContato();
+int buscaCmp();
 
 int main(){
 
@@ -35,10 +38,9 @@ int main(){
     v = pBuffer;
     v->qntd = 0;
     v->auxMenu = -1;
-    v->nListar = 0;
 
     do{
-       printf("1 - Insere\n2 - Busca\n3 - Listar\n4- Desalocar\n0 - Sair\n");
+       printf("\n1 - Insere\n2 - Busca\n3 - Listar\n4 - Desalocar\n5 - Excluir\n0 - Sair\n");
        scanf("%d", &v->auxMenu);
 
        switch(v->auxMenu){
@@ -58,6 +60,10 @@ int main(){
        case 4:
         desalocaAgenda();
        break;
+
+        case 5:
+        excluirContato();
+        break;
 
        case 0:
         return 0;
@@ -84,8 +90,16 @@ void criaContato(){
 
     printf("Nome : \n");
     scanf("%s20", pessoa->nome);
-    printf("Numero : \n");
-    scanf("%s20", pessoa->numero);
+
+    do{
+        printf("Numero : \n");
+        scanf("%s20", pessoa->numero);
+
+        strcpy(v->numAux, pessoa->numero);
+
+        v->excAux = buscaCmp();
+
+    }while(v->excAux == 1);
 }
 
 void buscaContato(){
@@ -152,14 +166,94 @@ void listarContatos(){
 
     p = pBuffer + sizeof(Var);
 
-    printf("Quantos contatos deseja listar ?\n");
-    scanf("%d", &v->nListar);
-
-    for((v->i) = 0; (v->i) < (v->nListar) ; (v->i)++){
-        printf("Nome: %s \nTelefone: %s\n\n", p->nome, p->numero);
-        p++;
+    if(v->qntd > 0){
+        for((v->i) = 0; (v->i) < (v->qntd) ; (v->i)++){
+            printf("Nome: %s \nTelefone: %s\n\n", p->nome, p->numero);
+            p++;
+        }
+    }else{
+        printf("Agenda Vazia\n");
     }
 
+}
+
+void excluirContato(){
+
+    Agenda *p;
+    p = pBuffer + sizeof(Var);
+
+    do{
+        printf("1 - Excluir pelo nome\n2 - Excluir pelo numero\n");
+        scanf("%d", &v->auxMenu);
+        
+        switch (v->auxMenu)    {
+            
+            case 1:
+            printf("Digite o nome: \n");
+            scanf("%s20", v->nomeAux);
+
+            for(v->i = 0; v->i < v->qntd; v->i++){
+                if(strcmp(v->nomeAux, p->nome)==0){
+                    v->qntd--;
+                    
+                    for(v->j = v->i; v->j < v->qntd; v->j++){
+                        p[v->j] = p[v->j+1];
+                    }
+                    pBuffer = realloc(pBuffer, sizeof(Var) + sizeof(Agenda) * v->qntd);
+                    v->excAux = 0;
+                    break;
+                }
+            }
+            if(v->excAux == 0){
+                printf("Contato excluido com sucesso\n");
+            }else{
+                printf("Contato não encontrado\n");
+            }
+            
+            break;
+        
+            case 2:
+            printf("Digite o numero: \n");
+            scanf("%s20", v->numAux);
+
+            for(v->i = 0; v->i < v->qntd; v->i++){
+                if(strcmp(v->numAux, p->numero)==0){
+                    v->qntd--;
+                    
+                    for(v->j = v->i; v->j < v->qntd; v->j++){
+                        p[v->j] = p[v->j+1];
+                    }
+                    pBuffer = realloc(pBuffer, sizeof(Var) + sizeof(Agenda) * v->qntd);
+                    v->excAux = 0;
+                    break;
+                }
+            }
+            if(v->excAux == 0){
+                printf("Contato excluido com sucesso\n");
+            }else{
+                printf("Contato não encontrado\n");
+            }
+            break;
+            
+            default:
+                printf("Opção Invalida\n");
+            break;
+        }
+    }while((v->auxMenu != 1) && (v->auxMenu != 2));
+}
+
+int buscaCmp(){
+    Agenda *p;
+    p = pBuffer + sizeof(Var);
+    
+    for((v->i) = 0; (v->i) < (v->qntd)-1; (v->i)++){
+        if(strcmp(v->numAux, p->numero) == 0){
+            printf("Ja registrado na Agenda\n");
+            return 1;
+        }
+        p++;
+    }
+    return 0;
 }
 
 void desalocaAgenda(){
