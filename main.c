@@ -30,6 +30,7 @@ void excluirContato();
 // void mainSort();
 void bubblesort();
 void selectionSort();
+void insertionSort();
 int buscaCmp();
 
 int main(){
@@ -44,7 +45,7 @@ int main(){
     v->auxMenu = -1;
 
     do{
-       printf("\n1 - Insere\n2 - Busca\n3 - Listar\n4 - Desalocar\n5 - Excluir\n6 - Sort Main\n7 - Bubble\n8 - Selection\n0 - Sair\n");
+       printf("\n1 - Insere\n2 - Busca\n3 - Listar\n4 - Desalocar\n5 - Excluir\n6 - Sort Main\n7 - Bubble\n8 - Selection\n9 - Insertion\n0 - Sair\n");
        scanf("%d", &v->auxMenu);
 
        switch(v->auxMenu){
@@ -80,6 +81,10 @@ int main(){
         case 8:
             selectionSort();
         break;
+
+        case 9:
+            insertionSort();
+        break;    
        
         case 0:
             return 0;
@@ -202,11 +207,11 @@ void listarContatos(){
 
     if(v->qntd > 0){
         for((v->i) = 0; (v->i) < (v->qntd) ; (v->i)++){
-            printf("Nome: %s \nTelefone: %s\n\n", p->nome, p->numero);
+            printf("\nNome: %s \nTelefone: %s\n\n", p->nome, p->numero);
             p++;
         }
     }else{
-        printf("Agenda Vazia\n");
+        printf("\nAgenda Vazia\n");
     }
 
 }
@@ -217,13 +222,13 @@ void excluirContato(){
     p = pBuffer + sizeof(Var);
 
     do{
-        printf("1 - Excluir pelo nome\n2 - Excluir pelo numero\n");
+        printf("\n1 - Excluir pelo nome\n2 - Excluir pelo numero\n");
         scanf("%d", &v->auxMenu);
         
         switch (v->auxMenu)    {
             
             case 1:
-            printf("Digite o nome: \n");
+            printf("\nDigite o nome: \n");
             scanf("%s20", v->nomeAux);
 
             for(v->i = 0; v->i < v->qntd; v->i++){
@@ -247,7 +252,7 @@ void excluirContato(){
             break;
         
             case 2:
-            printf("Digite o numero: \n");
+            printf("\nDigite o numero: \n");
             scanf("%s20", v->numAux);
 
             for(v->i = 0; v->i < v->qntd; v->i++){
@@ -324,6 +329,22 @@ void selectionSort(){
             pessoa[v->i] = pessoa[v->excAux];
             pessoa[v->excAux] = v->auxAg;
         }
+    }
+}
+
+void insertionSort(){
+    Agenda *pessoa;
+    pessoa = pBuffer + sizeof(Var);
+
+    for(v->i = 1; v->i < (v->qntd); v->i++){
+        v->auxAg = pessoa[v->i];
+        v->j = v->i-1;
+
+        while(v->j >= 0 && (strcmp(v->auxAg.nome, pessoa[v->j].nome) < 0)){
+            pessoa[v->j+1] = pessoa[v->j];
+            v->j--;
+        }
+        pessoa[v->j+1] = v->auxAg;
     }
 }
 
