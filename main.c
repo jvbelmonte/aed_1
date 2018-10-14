@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct atributos_Agenda {
+    char numero[20];
+    char nome[20];
+}Agenda;
+
 typedef struct variaveis{
     int qntd;
     int auxMenu;
@@ -11,12 +16,8 @@ typedef struct variaveis{
     int nomeCmp;
     char nomeAux[20];
     char numAux[20];
+    Agenda auxAg, tempAg;
 }Var;
-
-typedef struct atributos_Agenda {
-    char numero[20];
-    char nome[20];
-}Agenda;
 
 void *pBuffer = NULL;
 Var *v;
@@ -26,6 +27,8 @@ void buscaContato();
 void desalocaAgenda();
 void listarContatos();
 void excluirContato();
+void mainSort();
+void bubblesort();
 int buscaCmp();
 
 int main(){
@@ -40,41 +43,72 @@ int main(){
     v->auxMenu = -1;
 
     do{
-       printf("\n1 - Insere\n2 - Busca\n3 - Listar\n4 - Desalocar\n5 - Excluir\n0 - Sair\n");
+       printf("\n1 - Insere\n2 - Busca\n3 - Listar\n4 - Desalocar\n5 - Excluir\n6 - Sort Main\n7 - Bubble\n0 - Sair\n");
        scanf("%d", &v->auxMenu);
 
        switch(v->auxMenu){
 
        case 1:
-        criaContato();
+            criaContato();
        break;
 
        case 2:
-        buscaContato();
+            buscaContato();
        break;
 
        case 3:
-        listarContatos();
+            listarContatos();
        break;
 
        case 4:
-        desalocaAgenda();
+            desalocaAgenda();
        break;
 
         case 5:
-        excluirContato();
+            excluirContato();
+        break;
+        
+        case 6:
+            mainSort();
         break;
 
-       case 0:
-        return 0;
-       break;
+        case 7:
+            bubblesort();
+        break;
+       
+        case 0:
+            return 0;
+        break;
 
        default :
-       printf("Codigo incorreto\n");
+        printf("Codigo incorreto\n");
        }
 
     }while(v->auxMenu != 0);
-    return 0;
+    return -1;
+}
+
+void mainSort(){
+    do{
+        printf("1 - Bubble Sort\n2 - Selection Sort\n3 - Insertion Sort\n0 - Main\n");    
+        scanf("%d", v->excAux);
+        
+        switch(v->excAux){
+
+        case 1:
+            bubblesort();
+        break;
+        
+        case 0:
+            main();
+        break;
+
+        default:
+            printf("Wrong Code\n");
+        break;
+        }
+
+    }while(v->excAux < 0);
 }
 
 void criaContato(){
@@ -256,6 +290,22 @@ int buscaCmp(){
     return 0;
 }
 
+void bubblesort(){
+    Agenda *pessoa;
+    pessoa = pBuffer + sizeof(Var);
+
+    for(v->i = 0; v->i < (v->qntd) - 1; v->i++){
+        for(v->j = 0; v->j < (v->qntd) - (v->i) - 1; v->j++){            
+            if(strcmp(pessoa[v->j].nome, pessoa[v->j+1].nome) > 0){
+                v->auxAg = pessoa[v->j];
+                pessoa[v->j] = pessoa[v->j+1];
+                pessoa[v->j+1] = v->auxAg;
+            }
+        }
+    }
+}
+
 void desalocaAgenda(){
     free(pBuffer);
 }
+
