@@ -27,8 +27,9 @@ void buscaContato();
 void desalocaAgenda();
 void listarContatos();
 void excluirContato();
-void mainSort();
+// void mainSort();
 void bubblesort();
+void selectionSort();
 int buscaCmp();
 
 int main(){
@@ -43,7 +44,7 @@ int main(){
     v->auxMenu = -1;
 
     do{
-       printf("\n1 - Insere\n2 - Busca\n3 - Listar\n4 - Desalocar\n5 - Excluir\n6 - Sort Main\n7 - Bubble\n0 - Sair\n");
+       printf("\n1 - Insere\n2 - Busca\n3 - Listar\n4 - Desalocar\n5 - Excluir\n6 - Sort Main\n7 - Bubble\n8 - Selection\n0 - Sair\n");
        scanf("%d", &v->auxMenu);
 
        switch(v->auxMenu){
@@ -68,12 +69,16 @@ int main(){
             excluirContato();
         break;
         
-        case 6:
+        /*case 6:
             mainSort();
-        break;
+        break;*/
 
         case 7:
             bubblesort();
+        break;
+        
+        case 8:
+            selectionSort();
         break;
        
         case 0:
@@ -88,8 +93,8 @@ int main(){
     return -1;
 }
 
-void mainSort(){
-    do{
+/*void mainSort(){
+
         printf("1 - Bubble Sort\n2 - Selection Sort\n3 - Insertion Sort\n0 - Main\n");    
         scanf("%d", v->excAux);
         
@@ -98,18 +103,13 @@ void mainSort(){
         case 1:
             bubblesort();
         break;
-        
-        case 0:
-            main();
-        break;
-
+  
         default:
             printf("Wrong Code\n");
         break;
         }
 
-    }while(v->excAux < 0);
-}
+}*/
 
 void criaContato(){
 
@@ -122,7 +122,7 @@ void criaContato(){
     v = pBuffer;
     pessoa = pBuffer + (sizeof(Var) + (sizeof(Agenda) * (v->qntd-1)));
 
-    printf("Nome : \n");
+    printf("\nNome : \n");
     scanf("%s20", pessoa->nome);
 
     do{
@@ -305,7 +305,28 @@ void bubblesort(){
     }
 }
 
+void selectionSort(){
+    Agenda *pessoa;
+    pessoa = pBuffer + sizeof(Var);
+
+    for(v->i = 0; v->i < (v->qntd)-1; v->i++){
+        v->auxAg = pessoa[v->i];
+        v->nomeCmp = 0;
+        for(v->j = (v->i)+1; v->j < (v->qntd); v->j++){
+            if(strcmp(v->auxAg.nome, pessoa[v->j].nome) > 0){
+                v->auxAg = pessoa[v->j];
+                v->nomeCmp++;
+                v->excAux = v->j;
+            }    
+        }
+        if(v->nomeCmp > 0){
+            v->auxAg = pessoa[v->i];
+            pessoa[v->i] = pessoa[v->excAux];
+            pessoa[v->excAux] = v->auxAg;
+        }
+    }
+}
+
 void desalocaAgenda(){
     free(pBuffer);
 }
-
